@@ -1,0 +1,7 @@
+#perf:$(perf_name)/_expr
+# 开始性能实验
+# 输出记录实体entity @e[tag=result,limit=1]
+
+tag @e[tag=result] remove result
+summon marker 0 0 0 {Tags:["$(perf_name)","perf_v_test","result"],CustomName:'"$(perf_name)"'}
+execute as @e[tag=result,limit=1] run function perf:$(perf_name)/set_operations

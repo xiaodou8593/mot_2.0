@@ -1,0 +1,2 @@
+#$(module_prefix)$(test_name)/main
+

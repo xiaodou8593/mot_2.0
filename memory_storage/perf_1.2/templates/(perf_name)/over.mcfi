@@ -1,0 +1,6 @@
+#perf:$(perf_name)/over
+# perf:$(perf_name)/main调用
+
+data modify storage perf:class $(perf_name) set from entity @s data.perf_result
+scoreboard players set perf_v_test int 0
+kill @s

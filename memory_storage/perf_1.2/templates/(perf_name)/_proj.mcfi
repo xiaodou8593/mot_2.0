@@ -1,0 +1,5 @@
+#perf:$(perf_name)/_proj
+# 投射数据模板到临时对象
+# 输入storage perf:io input
+
+execute store result score perf_entity_cnt int run data get storage perf:io input.entity_cnt

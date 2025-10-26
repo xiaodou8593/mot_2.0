@@ -1,0 +1,17 @@
+#perf:$(perf_name)/main
+# perf:$(perf_name)/set_operations异步调用
+
+execute if score perf_v_test int matches 0 store success score perf_v_test int run tag @s add perf_awake
+execute unless entity @s[tag=perf_awake] run return fail
+execute unless entity @s[tag=perf_next_test] run return fail
+function marker_control:data/_get
+tag @s remove perf_next_test
+execute unless data storage marker_control:io result.perf_plates[0] run return run function perf:$(perf_name)/over
+
+data modify storage marker_control:io result.perf_plate set from storage marker_control:io result.perf_plates[0]
+data remove storage marker_control:io result.perf_plates[0]
+data modify storage perf:io input set from storage marker_control:io result.perf_plate
+function perf:$(perf_name)/_proj
+data modify storage perf:io afk append value "$(perf_name)"
+
+function marker_control:data/_store
