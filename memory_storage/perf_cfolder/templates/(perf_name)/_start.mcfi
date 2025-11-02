@@ -1,0 +1,4 @@
+#$(module_prefix)$(perf_name)/_start
+# 添加测试项目
+
+data modify storage perf:io afk prepend value "powerload"

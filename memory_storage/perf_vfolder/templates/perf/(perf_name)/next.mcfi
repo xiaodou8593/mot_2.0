@@ -1,0 +1,13 @@
+#$(module_prefix)perf/$(perf_name)/next
+# $(module_prefix)perf/$(perf_name)/_print调用
+
+tag @s add perf_next_test
+
+function marker_control:data/_get
+data modify storage perf:io result set value {plate:{},avg:0,scb_add:0}
+data modify storage perf:io result.plate set from storage marker_control:io result.perf_plate
+execute store result storage perf:io result.avg int 1 run scoreboard players get perf_avg int
+execute store result storage perf:io result.scb_add float 0.01 run scoreboard players get perf_scb_add int
+data modify storage marker_control:io result.perf_result append from storage perf:io result
+
+function marker_control:data/_store

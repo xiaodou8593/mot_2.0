@@ -1082,7 +1082,6 @@ def match_pattern(lst_patterns, test_string):
             return match.groupdict()
     return None
 
-
 # 模板全局变量
 template_name = '_get'
 function_name = '_get'
@@ -1553,6 +1552,9 @@ def del_functions():
         del_function(name)
     unprotect_functions()
 def cre_function(name):
+    if os.path.exists(name+'.mcfunction') and (not os.path.isdir(name+'.mcfunction')):
+        print(f'interface already exists: {name}.mcfunction')
+        return
     path = name.split('/')
     path.pop()
     if path:
@@ -1567,6 +1569,10 @@ def cre_function(name):
 def cre_functions():
     load_link_input()
     for name in user_input[1:]:
+        if os.path.exists(name+'.mcfunction') and (not os.path.isdir(name+'.mcfunction')):
+            continue
+        unprotect_function(name)
+    for name in user_input[1:]:
         cre_function(name)
 def init_functions():
     if 'init_interfaces' in dic_objects:
@@ -1575,7 +1581,10 @@ def init_functions():
 # 接口白名单
 def save_whitelist():
     global whitelist
-    file = open('.mot_memory/objects/whitelist.mcfo', 'w', encoding='utf-8')
+    try:
+        file = open('.mot_memory/objects/whitelist.mcfo', 'w', encoding='utf-8')
+    except:
+        return
     file.truncate(0)
     file.write('mot_whitelist: {')
     if whitelist:
@@ -1591,6 +1600,9 @@ def save_whitelist():
     file.close()
 def protect_function(name):
     global whitelist
+    if not (os.path.exists(name+'.mcfunction') and (not os.path.isdir(name+'.mcfunction'))):
+        print(f'interface not exist: {name}.mcfunction')
+        return
     if name not in whitelist:
         input_dic = {'type':'word', 'segment':name, 'name':name}
         obj = new_object(input_dic)
@@ -1615,6 +1627,18 @@ def unprotect_functions():
     for name in user_input[1:]:
         unprotect_function(name)
     save_whitelist()
+
+# 保护所有函数接口
+def protect_all():
+    global user_input
+    lst_functions = []
+    for folder_path, _, files in os.walk('./'):
+        path = folder_path[2:].replace('\\', '/')
+        if path:
+            path += '/'
+        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    user_input = ['protect'] + lst_functions
+    protect_functions()
 
 # mot全局运行协调程序
 # 解析对象程序
@@ -1706,6 +1730,11 @@ def stop():
 # 运行初始操作
 interpret()
 print('\n')
+
+# 没有白名单则默认保护所有函数接口
+if 'mot_whitelist' not in lst_objects:
+    protect_all()
+    print('\n')
 
 # 命令映射表
 command_table = {'':interpret_and_sync, 'interpret':interpret, 'sync':sync_code, 'stop':stop}

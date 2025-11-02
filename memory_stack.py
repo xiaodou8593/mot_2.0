@@ -114,7 +114,7 @@ def save_memory():
         if memory_name in lst_memories:
             print('命名不能与现有名字重复')
         elif memory_name == '#':
-            print('cancel.')
+            print('cancelled.')
             return
         break
     input_path = lib_path + '\\memory_storage\\' + f'{memory_name}'
@@ -218,6 +218,30 @@ def stack_pop():
     print('memory stack pop.')
     stack_sync_folder()
 
+# 创建文件夹
+def create_folder(path):
+    try:
+        os.makedirs(path,exist_ok=True)
+        print(f'created folder: {path}')
+    except:
+        pass
+def create_folders():
+    for path in user_input[1:]:
+        create_folder(path)
+
+# 删除文件夹
+def destroy_folder(path):
+    try:
+        shutil.rmtree(path)
+        print(f"folder destroyed: {path}")
+    except FileNotFoundError:
+        print(f"folder not exist: {path}")
+    except Exception as e:
+        pass
+def destroy_folders():
+    for path in user_input[1:]:
+        destroy_folder(path)
+
 def stop():
     """
     结束程序
@@ -240,6 +264,7 @@ print('\n')
 command_table = {'':run_mot, 'run':run_mot, 'stop':stop, 'save':save_memory}
 command_table |= {'push':stack_push, 'pop':stack_pop, 'merge':stack_merge}
 command_table |= {'mread':read_memories, 'sread':read_stack_top, 'print':print_memories}
+command_table |= {'make':create_folders, 'destroy':destroy_folders}
 # 主程序
 while True:
     user_input = input().split(' ')

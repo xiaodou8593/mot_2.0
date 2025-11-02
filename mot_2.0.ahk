@@ -35,3 +35,12 @@
 	if (ErrorLevel = "ERROR")
 		MsgBox, 运行Python脚本失败！请检查工作目录"%currentDir%"是否存在。
 	return
+
+^u::
+	currentDir := GetCurrentDir()
+	pythonPath := "python" ; 假设已在系统PATH中，否则需完整路径如 "C:\Python39\python.exe"
+	pythonScript := A_ScriptDir "\.mot.py"
+	RunWait, %pythonPath% "%pythonScript%" "%A_ScriptDir%", %currentDir%, UseErrorLevel, OutputVarPID
+	if (ErrorLevel = "ERROR")
+		MsgBox, 运行Python脚本失败！请检查工作目录"%currentDir%"是否存在。
+	return

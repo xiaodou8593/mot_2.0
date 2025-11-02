@@ -1,0 +1,13 @@
+#$(module_prefix)$(perf_name)/set_operations
+
+function marker_control:data/_get
+data modify storage marker_control:io result.tick_func set value "$(module_prefix)$(perf_name)/main"
+data modify storage marker_control:io result.perf_plates set value [\
+	{entity_cnt:25},\
+	{entity_cnt:50},\
+	{entity_cnt:100}\
+]
+data modify storage marker_control:io result.perf_result set value []
+function marker_control:data/_store
+tag @s add entity_ticked
+tag @s add perf_next_test
