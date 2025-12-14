@@ -15,6 +15,9 @@ global_default: {
 # 整数常量
 int_consts: {-1, 0, 1, 2, 3, 4, 5, 10, 100, 1000, 10000}
 
+# 项目名称
+project_name:_
+
 # 实体对象的数据位置
 entity_store_path:data
 

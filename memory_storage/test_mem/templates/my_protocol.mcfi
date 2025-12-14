@@ -1,0 +1,6 @@
+#$(module_prefix)my_protocol
+# 把obj_a赋值给obj_b
+# 输入obj_a, obj_b
+# 输出obj_b
+
+$assign $(obj_a) $(obj_b)

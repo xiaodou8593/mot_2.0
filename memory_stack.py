@@ -5,6 +5,29 @@ import pickle
 import shutil
 import subprocess
 
+# 模块文件夹预设
+current_dir = os.getcwd().split('\\')
+# 搜索模块的命名空间和路径
+anchor_found = False
+sub_folders = []
+for folder in current_dir[::-1]:
+    
+    # 找到functions/function文件夹停止
+    if folder in ('functions', 'function'):
+        anchor_found = True
+        continue
+    
+    # functions以外文件夹的处理
+    if anchor_found:
+        namespace = folder
+        break
+    else:
+        sub_folders.insert(0, folder)
+if not anchor_found:
+    print("路径不满足要求！")
+    time.sleep(5)
+    raise ValueError('path error')
+
 # 获取路径参数
 module_path = os.getcwd()
 lib_path = sys.argv[1]
@@ -179,6 +202,9 @@ def stack_push():
         print_memories()
         while True:
             memory_name = input('请选择记忆模板(输入名称)：')
+            if memory_name == '#':
+                print('cancelled.')
+                return
             if memory_name in lst_memories:
                 break
             print('记忆模板不存在！')
