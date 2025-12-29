@@ -28,12 +28,16 @@ prefix = f'{namespace}:' + '/'.join(sub_folders)
 if sub_folders:
     prefix += '/'
 
+module_name = namespace
+if sub_folders:
+    module_name = sub_folders[-1]
+
 file = open('.doc.mcfo', 'w', encoding='utf-8')
 content = """#{}doc.mcfo
 
 # {}临时对象
 _this:{{
 	
-}}""".format(prefix,namespace)
+}}""".format(prefix,module_name)
 file.write(content)
 file.close()
