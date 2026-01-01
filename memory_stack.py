@@ -1,7 +1,7 @@
 import os
 import sys
+import time
 import ctypes
-import pickle
 import shutil
 import subprocess
 
@@ -263,6 +263,7 @@ def destroy_folder(path):
     except FileNotFoundError:
         print(f"folder not exist: {path}")
     except Exception as e:
+        print(e)
         pass
 def destroy_folders():
     for path in user_input[1:]:
