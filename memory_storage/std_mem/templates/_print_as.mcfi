@@ -1,0 +1,4 @@
+#$(module_prefix)_print_as
+# 打印实例数据
+
+$print $(_entity)
