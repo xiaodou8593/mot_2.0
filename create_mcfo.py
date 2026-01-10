@@ -32,12 +32,20 @@ module_name = namespace
 if sub_folders:
     module_name = sub_folders[-1]
 
+this_fill = """_this:{
+	
+}"""
+
+try:
+    with open('.mot_memory/doc_plate.mcfo', 'r', encoding='utf-8') as file:
+        this_fill = file.read()
+except:
+    pass
+
 file = open('.doc.mcfo', 'w', encoding='utf-8')
 content = """#{}doc.mcfo
 
 # {}临时对象
-_this:{{
-	
-}}""".format(prefix,module_name)
+{}""".format(prefix,module_name,this_fill)
 file.write(content)
 file.close()

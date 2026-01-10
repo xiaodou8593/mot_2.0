@@ -4,6 +4,54 @@ import time
 import ctypes
 import shutil
 import subprocess
+from pathlib import Path
+
+def find_datapacks_directory():
+    """从当前目录向上查找名为datapacks的目录"""
+    current_path = Path.cwd()
+    
+    # 从当前目录开始向上遍历
+    while current_path != current_path.root:
+        # 检查当前目录是否是datapacks
+        if current_path.name == 'datapacks':
+            return current_path
+        
+        # 检查当前目录的子目录中是否有datapacks
+        for child in current_path.iterdir():
+            if child.is_dir() and child.name == 'datapacks':
+                return child
+        
+        # 向上移动一级目录
+        current_path = current_path.parent
+    
+    return None
+
+def find_folders_with_memory_storage(datapacks_path):
+    """在datapacks目录中查找包含memory_storage子文件夹的文件夹"""
+    folders_with_memory_storage = []
+    
+    if not datapacks_path or not datapacks_path.exists():
+        return folders_with_memory_storage
+    
+    # 遍历datapacks目录下的所有项目
+    for item in datapacks_path.iterdir():
+        if item.is_dir():
+            # 检查该文件夹是否包含memory_storage子文件夹
+            memory_storage_path = item / 'memory_storage'
+            if memory_storage_path.exists() and memory_storage_path.is_dir():
+                folders_with_memory_storage.append(item)
+    
+    return folders_with_memory_storage
+
+ex_paths = []
+# 查找datapacks目录
+datapacks_path = find_datapacks_directory()
+if datapacks_path:
+    # 查找包含memory_storage的文件夹
+    folders = find_folders_with_memory_storage(datapacks_path)
+    if folders:
+        for folder in folders:
+            ex_paths.append(f"{folder.absolute()}")
 
 # 模块文件夹预设
 current_dir = os.getcwd().split('\\')
@@ -189,8 +237,15 @@ def push_memory():
     if os.path.exists(input_path) and os.path.isdir(input_path):
         pass
     else:
-        print('memory not exit!')
-        return
+        bool_flag = True
+        for ex_path in ex_paths:
+            input_path = ex_path + '\\memory_storage\\' + f'{memory_name}'
+            if os.path.exists(input_path) and os.path.isdir(input_path):
+                bool_flag = False
+                break
+        if bool_flag:
+            print('memory not exit!')
+            return
     stack.append(folder_to_memory(input_path))
     print(f'pushed memory: {memory_name}.')
     stack_sync_folder()
