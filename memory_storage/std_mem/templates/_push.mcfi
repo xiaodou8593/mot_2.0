@@ -1,0 +1,5 @@
+#$(module_prefix)_push
+# 临时对象入栈
+
+function $(module_prefix)_model
+data modify storage $(project_name):io rec prepend from storage $(project_name):io result

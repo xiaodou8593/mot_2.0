@@ -1,0 +1,6 @@
+#$(module_prefix)_pop
+# 临时对象出栈
+
+data modify storage $(project_name):io input set from storage $(project_name):io rec[0]
+data remove storage $(project_name):io rec[0]
+function $(module_prefix)_proj

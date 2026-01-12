@@ -37,7 +37,7 @@ this_fill = """_this:{
 }"""
 
 try:
-    with open('.mot_memory/doc_plate.mcfo', 'r', encoding='utf-8') as file:
+    with open('.mot_memory/templates/.doc.mcfo', 'r', encoding='utf-8') as file:
         this_fill = file.read()
 except:
     pass
