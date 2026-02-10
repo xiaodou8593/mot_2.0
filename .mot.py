@@ -1171,9 +1171,9 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             else:
                 return ''
         if args[0].type == 'nbt' and args[1].type == 'nbt':
-            return f'data modify storage $(3):io temp set from $(1)\ndata modify $(1) set from $(2)\ndata modify $(2) set from storage $(3):io temp'
+            return 'data modify storage $(3):io temp set from $(1)\ndata modify $(1) set from $(2)\ndata modify $(2) set from storage $(3):io temp'
         if args[0].type == 'score' and args[1].type == 'score':
-            return f'scoreboard players operation $(1) >< $(2)'
+            return 'scoreboard players operation $(1) >< $(2)'
         if args[0].type == 'nbt' and args[1].type == 'score':
             res =  f'execute store result $(1) {type_table[args[0].data_type]} '
             temp_res = '{:.15f}'.format(1/args[1].scale).rstrip('0')
@@ -1183,7 +1183,7 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             res += ' run scoreboard players get $(2)'
             res = 'data modify storage $(3):io temp set from $(1)\n' + res
             if args[1].scale == 1:
-                res += f'\nexecute store result score $(2) run data get storage $(3):io temp'
+                res += '\nexecute store result score $(2) run data get storage $(3):io temp'
             else:
                 res += f'\nexecute store result score $(2) run data get storage $(3):io temp {args[1].scale}'
             return res
@@ -1196,7 +1196,7 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             res += ' run scoreboard players get $(1)'
             res = 'data modify storage $(3):io temp set from $(2)\n' + res
             if args[0].scale == 1:
-                res += f'\nexecute store result score $(1) run data get storage $(3):io temp'
+                res += '\nexecute store result score $(1) run data get storage $(3):io temp'
             else:
                 res += f'\nexecute store result score $(1) run data get storage $(3):io temp {args[0].scale}'
             return res
@@ -1215,9 +1215,9 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             pre_args[0] = pre_part + lst_nbt + res_part
             cnt_lines[0] = min([len(_args) for _args in pre_args])
         if args[0].type == 'nbt':
-            return f'data modify $(1)'
+            return 'data modify $(1)'
         if args[0].type == 'score':
-            return f'scoreboard objectives add $(1) dummy'
+            return 'scoreboard objectives add $(1) dummy'
         return ''
     if macro == '$init':
         if len(args) < 1:
@@ -1233,9 +1233,9 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             pre_args[0] = pre_part + lst_nbt + res_part
             cnt_lines[0] = min([len(_args) for _args in pre_args])
         if args[0].type == 'nbt':
-            return f'data modify $(1)'
+            return 'data modify $(1)'
         if args[0].type == 'score':
-            return f'scoreboard players set $(1) 0'
+            return 'scoreboard players set $(1) 0'
         return ''
     if macro == '$assign':
         if len(args) < 2:
@@ -1275,7 +1275,7 @@ def macro_line(macro, args, cur_index, pre_args, cnt_lines):
             return res
         if args[0].type == 'score' and args[1].type == 'nbt':
             if args[0].scale == 1:
-                return f'execute store result score $(1) run data get $(2)'
+                return 'execute store result score $(1) run data get $(2)'
             return f'execute store result score $(1) run data get $(2) {args[0].scale}'
         return ''
 # 模板生成文件
@@ -1627,6 +1627,41 @@ def unprotect_functions():
     for name in user_input[1:]:
         unprotect_function(name)
     save_whitelist()
+def unprotect_data():
+    global user_input
+    global template_name
+    lst_functions = []
+    for folder_path, _, files in os.walk('./'):
+        path = folder_path[2:].replace('\\', '/')
+        if path:
+            path += '/'
+        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    lst_templates = []
+    for folder_path, _, files in os.walk('./.mot_memory/templates'):
+        path = folder_path[24:].replace('\\', '/')
+        if path:
+            path += '/'
+        lst_templates += [path+file[0:-5] for file in files if file.endswith('.mcfi')]
+    lst_templates = [file for file in lst_templates if '(' not in file] + [file for file in lst_templates if '(' in file]
+    for file_name in lst_functions:
+        if file_name not in whitelist:
+            continue
+        res_dict = match_pattern(lst_templates, file_name)
+        if res_dict is not None:
+            try:
+                with open('.mot_memory/templates/'+template_name+'.mcfi', 'r', encoding='utf-8') as file:
+                    content = file.read()
+                    temp_flag = [
+                            '_this' in content,
+                            '_entity' in content,
+                            '_input_plate' in content,
+                            '_result_plate' in content
+                        ]
+                    if any(temp_flag):
+                        user_input.append(file_name)
+            except:
+                pass
+    unprotect_functions()
 
 # 保护所有函数接口
 def protect_all():
@@ -1740,7 +1775,7 @@ if 'mot_whitelist' not in lst_objects:
 command_table = {'':interpret_and_sync, 'interpret':interpret, 'sync':sync_code, 'stop':stop}
 command_table |= {'list':print_object_names, 'print':print_objects, 'printi':print_index_object}
 command_table |= {'cre':cre_functions, 'init':init_functions, 'del':del_functions}
-command_table |= {'protect':protect_functions, 'unprotect':unprotect_functions}
+command_table |= {'protect':protect_functions, 'unprotect':unprotect_functions, 'unprotect_data':unprotect_data}
 command_table |= {'creis':creis, 'creisp':creisp, 'version':mot_version}
 # 主程序
 while True:
