@@ -11,7 +11,10 @@ def find_datapacks_directory():
     current_path = Path.cwd()
     
     # 从当前目录开始向上遍历
+    temp_cnt = 0
     while current_path != current_path.root:
+        if temp_cnt > 50:
+            return None
         # 检查当前目录是否是datapacks
         if current_path.name == 'datapacks':
             return current_path
@@ -23,6 +26,7 @@ def find_datapacks_directory():
         
         # 向上移动一级目录
         current_path = current_path.parent
+        temp_cnt += 1
     
     return None
 
