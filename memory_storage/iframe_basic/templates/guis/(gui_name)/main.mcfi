@@ -1,0 +1,28 @@
+#$(module_prefix)guis/$(gui_name)/main
+
+data modify storage iframe:io inv set from entity @s Inventory
+data modify storage iframe:io sel set value {}
+data modify storage iframe:io sel set from entity @s SelectedItem
+
+# 检测GUI发生变动
+scoreboard players set update_gui int 0
+execute unless data storage iframe:io inv[{Slot:0b}].components."minecraft:custom_data"{button:0b} run scoreboard players set update_gui int 1
+execute unless data storage iframe:io inv[{Slot:1b}].components."minecraft:custom_data"{button:1b} run scoreboard players set update_gui int 1
+execute unless data storage iframe:io inv[{Slot:2b}].components."minecraft:custom_data"{button:2b} run scoreboard players set update_gui int 1
+execute unless data storage iframe:io inv[{Slot:3b}].components."minecraft:custom_data"{button:3b} run scoreboard players set update_gui int 1
+execute unless data storage iframe:io inv[{Slot:4b}].components."minecraft:custom_data"{button:4b} run scoreboard players set update_gui int 1
+execute if data storage iframe:io inv[{Slot:3b,id:"minecraft:written_book"}] run scoreboard players set update_gui int 1
+execute if score update_gui int matches 1 run function $(module_prefix)guis/$(gui_name)/items
+
+# 存储按钮
+execute if score @s iframe_crc_state matches 1 \
+	if data storage iframe:io sel.components."minecraft:custom_data"{button:4b} \
+	run function $(module_prefix)guis/$(gui_name)/save_button
+
+# 退出GUI
+execute if score @s iframe_crc_state matches 1 \
+	if data storage iframe:io sel.components."minecraft:custom_data"{button:8b} \
+	run return run function $(module_prefix)guis/$(gui_name)/exit
+execute unless data storage iframe:io inv[{Slot:8b}].\
+	components."minecraft:custom_data"{button:8b} \
+	run return run function $(module_prefix)guis/$(gui_name)/exit

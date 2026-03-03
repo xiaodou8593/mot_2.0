@@ -6,6 +6,58 @@ import shutil
 import subprocess
 from pathlib import Path
 
+def print_folder_structure(path, indent="  ", show_files=True, ignore_dirs=None, level=0):
+    """
+    递归打印指定文件夹的结构。
+
+    参数：
+        path (str): 要打印的文件夹路径。
+        indent (str): 每级缩进使用的字符串，默认为两个空格。
+        show_files (bool): 是否显示文件名，默认为 True。
+        ignore_dirs (list): 要忽略的文件夹名称列表，默认为 None。
+        level (int): 内部使用的递归层级，调用时无需指定。
+    """
+    if ignore_dirs is None:
+        ignore_dirs = []
+
+    # 检查路径是否存在且为目录
+    if not os.path.exists(path):
+        print(f"错误：路径 '{path}' 不存在")
+        return
+    if not os.path.isdir(path):
+        print(f"错误：'{path}' 不是一个文件夹")
+        return
+
+    # 获取当前文件夹名称并打印（根目录特殊处理）
+    base_name = os.path.basename(os.path.normpath(path))
+    if level == 0:
+        print(base_name + "/")
+    else:
+        print(indent * (level - 1) + "|-- " + base_name + "/")
+
+    try:
+        items = sorted(os.listdir(path))  # 排序以保持输出一致
+    except PermissionError:
+        print(indent * level + "|-- [权限不足，无法访问]")
+        return
+
+    for item in items:
+        # 跳过隐藏文件和文件夹（以 . 开头），如果需要显示可注释掉
+        # if item.startswith('.'):
+        #     continue
+
+        item_path = os.path.join(path, item)
+
+        # 如果是目录且不在忽略列表中，递归处理
+        if os.path.isdir(item_path):
+            if item in ignore_dirs:
+                continue
+            print_folder_structure(item_path, indent, show_files, ignore_dirs, level + 1)
+        else:
+            # 如果是文件且允许显示
+            if show_files:
+                print(indent * level + "|-- " + item)
+
 def find_datapacks_directory():
     """从当前目录向上查找名为datapacks的目录"""
     current_path = Path.cwd()
@@ -328,6 +380,9 @@ def destroy_folders():
     for path in user_input[1:]:
         destroy_folder(path)
 
+def inspect():
+    print_folder_structure('.mot_memory/templates')
+
 def stop():
     """
     结束程序
@@ -350,7 +405,7 @@ print('\n')
 command_table = {'':run_mot, 'run':run_mot, 'stop':stop, 'save':save_memory}
 command_table |= {'push':stack_push, 'pop':stack_pop, 'merge':stack_merge}
 command_table |= {'mread':read_memories, 'sread':read_stack_top, 'print':print_memories}
-command_table |= {'make':create_folders, 'destroy':destroy_folders}
+command_table |= {'make':create_folders, 'destroy':destroy_folders, 'inspect':inspect}
 # 主程序
 while True:
     user_input = input().split(' ')

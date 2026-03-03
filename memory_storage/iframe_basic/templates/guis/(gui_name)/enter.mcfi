@@ -1,0 +1,5 @@
+#$(module_prefix)guis/$(gui_name)/enter
+
+function iframe:player_space/_get
+execute unless data storage iframe:io player.cache_inv run function iframe:_inv
+function $(module_prefix)guis/$(gui_name)/items

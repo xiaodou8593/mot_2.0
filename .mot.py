@@ -1577,6 +1577,9 @@ def cre_functions():
 def init_functions():
     if 'init_interfaces' in dic_objects:
         [cre_function(obj.segment) for obj in dic_objects['init_interfaces'].flatten() if obj.type=='word']
+    else:
+        interfaces = [filename[0:-5] for filename in os.listdir('./.mot_memory/templates') if filename.endswith('.mcfi')]
+        [cre_function(interface) for interface in interfaces]
 
 # 接口白名单
 def save_whitelist():

@@ -1,0 +1,4 @@
+#$(module_prefix)guis/$(gui_name)/exit
+# $(module_prefix)guis/$(gui_name)/main调用
+
+function iframe:_exit_inv
