@@ -753,10 +753,15 @@ def compose_to_plate(compose:MCFObject, name='_input_plate', nbt_path='input', p
         # 添加普通元素
         if obj.type == 'score':
             data_type = 'Int'
+            try:
+                if obj.scale > 1:
+                    data_type = 'Double'
+            except:
+                pass
             path = f'storage {project_name}:io {nbt_path}.{obj.player}'
             segment = f'{path},{data_type}'
             input_dic = {'name':obj.name, 'type':'nbt', 'relative':False}
-            input_dic |= {'data_type':'Int', 'init_value':'0'}
+            input_dic |= {'data_type':f'{data_type}', 'init_value':'0'}
             input_dic |= {'segment':segment, 'path':path, 'init_num':0}
             input_dic |= {'lst_objects':[], 'dic_objects':{},'cnt_objects':0}
             sub_obj:MCFObject = new_object(input_dic)
