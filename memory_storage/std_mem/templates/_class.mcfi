@@ -1,3 +1,6 @@
 #$(module_prefix)_class
 # 生成预设静态数据模板
 
+function $(module_prefix)_zero
+function $(module_prefix)_model
+data modify storage $(project_name):class $(module_name)_plate set from storage $(project_name):io result
