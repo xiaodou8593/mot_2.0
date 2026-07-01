@@ -1,0 +1,28 @@
+#$(module_prefix)test/$(test_name)/start
+
+# 生成测试程序实体
+data modify storage $(project_name):io input set from storage $(project_name):class $(module_name)_plate
+function $(module_prefix)_proj
+execute positioned 0.0 0.0 0.0 rotated 0.0 0.0 as @e[tag=math_marker,limit=1] run function $(module_prefix)_anchor_to
+function $(module_prefix)_model
+data modify storage $(project_name):io input set from storage $(project_name):io result
+execute positioned 0.0 0.0 0.0 run function $(module_prefix)_new
+tag @e[tag=result,limit=1] add test
+
+execute as @e[tag=result,limit=1] run function marker_control:data/_get
+
+# 设置测试程序主函数和销毁函数
+data modify storage marker_control:io result.tick_func set value "$(module_prefix)test/$(test_name)/main"
+data modify storage marker_control:io result.del_func set value "$(module_prefix)test/$(test_name)/end"
+
+execute as @e[tag=result,limit=1] run function marker_control:data/_store
+tag @e[tag=result,limit=1] add entity_ticked
+tag @e[tag=result,limit=1] add entity_todel
+
+# 设置测试程序运行时间
+scoreboard players set @e[tag=result,limit=1] killtime 20
+
+scoreboard players set test int -1
+scoreboard players set test_n int 0
+
+data modify storage $(project_name):io test_frames set value {}

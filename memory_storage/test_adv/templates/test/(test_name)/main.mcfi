@@ -1,0 +1,12 @@
+#$(module_prefix)test/$(test_name)/main
+
+execute unless score test int matches -1 run return fail
+scoreboard players set @s killtime 10
+
+function $(module_prefix)_get
+function $(module_prefix)_model
+execute store result storage $(project_name):io frame int 1 run scoreboard players get test_n int
+function $(module_prefix)test/$(test_name)/store_frame with storage $(project_name):io {}
+
+#scoreboard players set test int 1
+scoreboard players add test_n int 1

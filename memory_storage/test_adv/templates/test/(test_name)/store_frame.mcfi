@@ -1,0 +1,4 @@
+#$(module_prefix)test/$(test_name)/store_frame
+# $(module_prefix)test/$(test_name)/main调用
+
+data modify storage $(project_name):io test_frames.(frame) set from storage $(project_name):io result
