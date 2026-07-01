@@ -3,6 +3,9 @@
 execute unless score test int matches -1 run return fail
 scoreboard players set @s killtime 10
 
+tellraw @a "---"
+tellraw @a ["test_n: ", {"score":{"name":"test_n","objective":"int"}}]
+
 function $(module_prefix)_get
 function $(module_prefix)_model
 execute store result storage $(project_name):io frame int 1 run scoreboard players get test_n int
