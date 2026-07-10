@@ -1683,6 +1683,18 @@ def protect_all():
     user_input = ['protect'] + lst_functions
     protect_functions()
 
+# 取消保护所有函数接口
+def unprotect_all():
+    global user_input
+    lst_functions = []
+    for folder_path, _, files in os.walk('./'):
+        path = folder_path[2:].replace('\\', '/')
+        if path:
+            path += '/'
+        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    user_input = ['unprotect'] + lst_functions
+    unprotect_functions()
+
 # mot全局运行协调程序
 # 解析对象程序
 def interpret():
@@ -1784,6 +1796,7 @@ command_table = {'':interpret_and_sync, 'interpret':interpret, 'sync':sync_code,
 command_table |= {'list':print_object_names, 'print':print_objects, 'printi':print_index_object}
 command_table |= {'cre':cre_functions, 'init':init_functions, 'del':del_functions}
 command_table |= {'protect':protect_functions, 'unprotect':unprotect_functions, 'unprotect_data':unprotect_data}
+command_table |= {'protect_all':protect_all, 'unprotect_all':unprotect_all}
 command_table |= {'creis':creis, 'creisp':creisp, 'version':mot_version}
 # 主程序
 while True:
