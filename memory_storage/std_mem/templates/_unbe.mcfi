@@ -2,4 +2,4 @@
 # 解除实体对象身份
 # 输入执行实体
 
-tag @s remove $(module_name)
+tag @s remove $(project_name)_$(module_name)

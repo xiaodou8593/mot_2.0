@@ -4,5 +4,5 @@
 # 输出 @e[tag=result,limit=1]
 
 tag @e[tag=result] remove result
-summon $(entity_type) ~ ~ ~ {Tags:["$(module_name)", "result"]}
+summon $(entity_type) ~ ~ ~ {Tags:["$(project_name)_$(module_name)", "result"],CustomName:"$(project_name)_$(module_name)"}
 execute as @e[tag=result,limit=1] run function $(module_prefix)gen_set

@@ -2,5 +2,5 @@
 # 使用临时对象修饰实体，使其成为$(module_name)实例
 # 输入执行实体
 
-tag @s add $(module_name)
+tag @s add $(project_name)_$(module_name)
 function $(module_prefix)_store
