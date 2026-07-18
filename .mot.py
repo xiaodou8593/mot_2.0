@@ -1583,7 +1583,18 @@ def init_functions():
     if 'init_interfaces' in dic_objects:
         [cre_function(obj.segment) for obj in dic_objects['init_interfaces'].flatten() if obj.type=='word']
     else:
-        interfaces = [filename[0:-5] for filename in os.listdir('./.mot_memory/templates') if filename.endswith('.mcfi')]
+        base = './.mot_memory/templates'
+        interfaces = []
+        for root, dirs, files in os.walk(base):
+            for file in files:
+                if file.endswith('.mcfi'):
+                    # 获取相对路径（使用系统分隔符，Windows 下是反斜杠）
+                    rel_path = os.path.relpath(os.path.join(root, file), base)
+                    # 去掉 .mcfi 后缀（更健壮）
+                    rel_path_no_ext = os.path.splitext(rel_path)[0]
+                    # 统一转换为正斜杠
+                    rel_path_no_ext = rel_path_no_ext.replace('\\', '/')
+                    interfaces.append(rel_path_no_ext)
         [cre_function(interface) for interface in interfaces]
 
 # 接口白名单
