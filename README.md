@@ -19,8 +19,8 @@ Mcfunction Object Template 2.0
 
 打开模块目录后，在当前目录下使用快捷键：
 
-ctrl+m：打开mot记忆栈（黑色终端窗口）
-ctrl+o：创建对象格式文档
+* ctrl+m：打开mot记忆栈（黑色终端窗口）
+* ctrl+o：创建对象格式文档
 
 第一次使用mot，您可以先在记忆栈中输入命令`run`
 
