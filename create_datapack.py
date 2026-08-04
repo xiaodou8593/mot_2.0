@@ -31,11 +31,11 @@ file = open(f'{name}/pack.mcmeta', 'w', encoding='utf-8')
 file.write('''
 {
     "pack":{
-        "description": "",
+        "description": "version- by-",
         "pack_format": 71,
-        "supported_formats": [48, 81],
-        "min_format": 48,
-        "max_format": [88, 0]
+        "supported_formats": [71, 107],
+        "min_format": 71,
+        "max_format": [107, 1]
     }
 }''')
 file.close()
