@@ -673,6 +673,7 @@ def rebuild_templates():
     init_global_settings()
 
     print('templates rebuilt.')
+    read_stack_top()
 
 def inspect():
     print_folder_structure('.mot_memory/templates')
