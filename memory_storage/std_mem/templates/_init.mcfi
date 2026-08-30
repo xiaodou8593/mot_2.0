@@ -15,3 +15,5 @@ function $(module_prefix)_consts
 function $(module_prefix)_class
 
 function $(module_prefix)$(sub_modules)init
+
+function $(module_prefix)init_operation

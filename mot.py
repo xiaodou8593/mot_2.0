@@ -12,7 +12,7 @@ except Exception:
     pass  # 如果失败则静默处理
 
 # 模块文件夹预设
-current_dir = os.getcwd().split('\\')
+current_dir = os.getcwd().split(os.sep)
 # 搜索模块的命名空间和路径
 anchor_found = False
 sub_folders = []
@@ -1478,17 +1478,21 @@ def sync_code():
     global template_name, function_name, update_funcs
     update_funcs = []
     lst_functions = []
-    for folder_path, _, files in os.walk('./'):
-        path = folder_path[2:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    for folder_path, _, files in os.walk('.'):
+        rel = os.path.relpath(folder_path, start='.')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_functions += [path + file[:-11] for file in files if file.endswith('.mcfunction')]
     lst_templates = []
-    for folder_path, _, files in os.walk('./.mot_memory/templates'):
-        path = folder_path[24:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_templates += [path+file[0:-5] for file in files if file.endswith('.mcfi')]
+    for folder_path, _, files in os.walk('.mot_memory/templates'):
+        rel = os.path.relpath(folder_path, start='.mot_memory/templates')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_templates += [path + file[:-5] for file in files if file.endswith('.mcfi')]
     lst_templates = [file for file in lst_templates if '(' not in file] + [file for file in lst_templates if '(' in file]
     print('code syncing...')
     cnt_interfaces = 0
@@ -1514,11 +1518,13 @@ def sync_code():
 def load_link_input():
     global template_name
     lst_templates = []
-    for folder_path, _, files in os.walk('./.mot_memory/templates'):
-        path = folder_path[24:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_templates += [path+file[0:-5] for file in files if file.endswith('.mcfi')]
+    for folder_path, _, files in os.walk('.mot_memory/templates'):
+        rel = os.path.relpath(folder_path, start='.mot_memory/templates')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_templates += [path + file[:-5] for file in files if file.endswith('.mcfi')]
     for name in user_input[1:]:
         if not name.endswith("*"): continue
         folders = name[:-1].split('/')
@@ -1583,7 +1589,7 @@ def init_functions():
     if 'init_interfaces' in dic_objects:
         [cre_function(obj.segment) for obj in dic_objects['init_interfaces'].flatten() if obj.type=='word']
     else:
-        base = './.mot_memory/templates'
+        base = '.mot_memory/templates'
         interfaces = []
         for root, dirs, files in os.walk(base):
             for file in files:
@@ -1593,7 +1599,7 @@ def init_functions():
                     # 去掉 .mcfi 后缀（更健壮）
                     rel_path_no_ext = os.path.splitext(rel_path)[0]
                     # 统一转换为正斜杠
-                    rel_path_no_ext = rel_path_no_ext.replace('\\', '/')
+                    rel_path_no_ext = rel_path_no_ext.replace(os.sep, '/')
                     interfaces.append(rel_path_no_ext)
         [cre_function(interface) for interface in interfaces]
 
@@ -1650,17 +1656,21 @@ def unprotect_data():
     global user_input
     global template_name
     lst_functions = []
-    for folder_path, _, files in os.walk('./'):
-        path = folder_path[2:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    for folder_path, _, files in os.walk('.'):
+        rel = os.path.relpath(folder_path, start='.')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_functions += [path + file[:-11] for file in files if file.endswith('.mcfunction')]
     lst_templates = []
-    for folder_path, _, files in os.walk('./.mot_memory/templates'):
-        path = folder_path[24:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_templates += [path+file[0:-5] for file in files if file.endswith('.mcfi')]
+    for folder_path, _, files in os.walk('.mot_memory/templates'):
+        rel = os.path.relpath(folder_path, start='.mot_memory/templates')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_templates += [path + file[:-5] for file in files if file.endswith('.mcfi')]
     lst_templates = [file for file in lst_templates if '(' not in file] + [file for file in lst_templates if '(' in file]
     for file_name in lst_functions:
         if file_name not in whitelist:
@@ -1686,11 +1696,13 @@ def unprotect_data():
 def protect_all():
     global user_input
     lst_functions = []
-    for folder_path, _, files in os.walk('./'):
-        path = folder_path[2:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    for folder_path, _, files in os.walk('.'):
+        rel = os.path.relpath(folder_path, start='.')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_functions += [path + file[:-11] for file in files if file.endswith('.mcfunction')]
     user_input = ['protect'] + lst_functions
     protect_functions()
 
@@ -1698,11 +1710,13 @@ def protect_all():
 def unprotect_all():
     global user_input
     lst_functions = []
-    for folder_path, _, files in os.walk('./'):
-        path = folder_path[2:].replace('\\', '/')
-        if path:
-            path += '/'
-        lst_functions += [path+file[0:-11] for file in files if file.endswith('.mcfunction')]
+    for folder_path, _, files in os.walk('.'):
+        rel = os.path.relpath(folder_path, start='.')
+        if rel == '.':
+            path = ''
+        else:
+            path = rel.replace(os.sep, '/') + '/'
+        lst_functions += [path + file[:-11] for file in files if file.endswith('.mcfunction')]
     user_input = ['unprotect'] + lst_functions
     unprotect_functions()
 
@@ -1736,9 +1750,13 @@ def interpret():
     lst_objs = []
     dic_objs = {}
     cnt_objs = 0
-    for folder_path, _, files in os.walk('./'):
+    for folder_path, _, files in os.walk('.'):
         if 'init.mcfunction' in files:
-            obj_name = folder_path[2:].replace('\\', '/')+'/'
+            rel = os.path.relpath(folder_path, start='.')
+            if rel == '.':
+                obj_name = ''
+            else:
+                obj_name = rel.replace(os.sep, '/') + '/'
             obj = new_object({'name':obj_name, 'type':'word', 'segment':obj_name})
             if obj_name in dic_objs:
                 dic_objs[obj_name] = obj
@@ -1787,7 +1805,7 @@ def creisp():
 
 # 输出版本
 def mot_version():
-    print('当前mot版本为1.1')
+    print('当前mot版本为1.2')
 
 # 结束程序
 def stop():
